@@ -13,7 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AccelerateDecelerateInterpolator;
-import android.view.animation.BounceInterpolator;
+import android.view.animation.DecelerateInterpolator;
 import android.widget.ImageView;
 
 import com.aesean.blinds.R;
@@ -95,8 +95,8 @@ public class NewEffect extends EffectView {
 //        View view = LayoutInflater.from(context).inflate(R.layout.grid_image_view, mContainer, false);
         ImageView imageView = (ImageView) LayoutInflater.from(context).inflate(R.layout.grid_image_view, mContainer, false);
         imageView.setImageBitmap(bitmap);
-        // 这里注意设置weight=1,宽度为0
-        imageView.setScaleType(ImageView.ScaleType.FIT_CENTER);
+        // 这里注意设置weight=1,宽度为0,设置ScaleType为FitXY来修正显示问题
+        imageView.setScaleType(ImageView.ScaleType.FIT_XY);
         if (type == TYPE_NEW_VIEW) {
             imageView.setVisibility(View.INVISIBLE);
         }
@@ -117,15 +117,23 @@ public class NewEffect extends EffectView {
     @Override
     protected Bitmap[] cutBitmaps(Bitmap bitmap, int type) {
         Log.e("debug", "裁剪Bitmap" + (type == TYPE_OLD_VIEW ? "旧View" : "新View"));
-        // 这里可以对Bitmap做下缩放裁剪
+        // 这里可以对Bitmap做下缩放裁剪,这里如果bitmap大小不是partX整数倍的话,这里会出现裁剪不完整的问题
+        // 这里如果计算差值太麻烦了,其实也没必要,效果也不好,所以直接在getImageView的时候设置ImageView的scaleType为fitXY
+        // 来修正显示问题,这样图像会有非常微小的拉伸.
         int partX = bitmap.getWidth() / mColumnCount;
+        // X方向的差值
+        int patchX = bitmap.getWidth() - partX * mColumnCount;
+        Log.e("debug", "patchX=" + patchX);
         int partY = bitmap.getHeight() / mRowCount;
-//        int height = bitmap.getHeight();
+        // Y方向的差值
+        int patchY = bitmap.getHeight() - partY * mRowCount;
+        Log.e("debug", "patchY=" + patchY);
         int sum = mColumnCount * mRowCount;
         Bitmap[] bitmaps = new Bitmap[sum];
         for (int i = 0; i < mRowCount; i++) {
             for (int j = 0; j < mColumnCount; j++) {
-                bitmaps[i * mColumnCount + j] = Bitmap.createBitmap(bitmap, partX * j, partY * i, partX, partY);
+                bitmaps[i * mColumnCount + j] = Bitmap.createBitmap(bitmap, partX * j,
+                        partY * i, partX, partY);
             }
         }
         Log.e("debug", "View宽度=" + partX);
@@ -136,13 +144,22 @@ public class NewEffect extends EffectView {
     protected Animator setAnimator(View view, int index, int type) {
         ObjectAnimator objectAnimator = ObjectAnimator.ofFloat(view, "rotationX",
                 type == TYPE_OLD_VIEW ? 0 : -90, type == TYPE_OLD_VIEW ? 90 : 0);
-        objectAnimator.setDuration(800);
-        objectAnimator.setStartDelay(index * 100);
+        objectAnimator.setDuration(1600);
+        int[] convert = convert(index);
+        objectAnimator.setStartDelay(convert[0] * 100 + convert[1] * 120);
         if (type == TYPE_OLD_VIEW) {
             objectAnimator.setInterpolator(new AccelerateDecelerateInterpolator());
         } else {
-            objectAnimator.setInterpolator(new BounceInterpolator());
+            objectAnimator.setInterpolator(new DecelerateInterpolator());
         }
         return objectAnimator;
+    }
+
+    private int[] convert(int index) {
+        int[] result = new int[2];
+        result[0] = index / mColumnCount;
+        result[1] = index % mRowCount;
+
+        return result;
     }
 }
