@@ -32,10 +32,16 @@ public abstract class EffectView {
 
         for (int i = 0; i < oldBitmaps.length; i++) {
             final int j = i;
-            final ImageView imageView = createImageView(oldBitmaps[i]);
+            final ImageView imageView = createImageView(oldBitmaps[i], TYPE_OLD_VIEW);
             addToViewGroup(imageView, i, TYPE_OLD_VIEW);
             Animator animator = setAnimator(imageView, i, TYPE_OLD_VIEW);
             animator.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+                    super.onAnimationStart(animation);
+                    imageView.setVisibility(View.VISIBLE);
+                }
+
                 @Override
                 public void onAnimationEnd(Animator animation) {
                     super.onAnimationEnd(animation);
@@ -67,10 +73,16 @@ public abstract class EffectView {
         for (int i = 0; i < bitmaps.length; i++) {
             final int j = i;
             // 这里如果newBitmap的length和oldBitmaps不一致的时候会有问题
-            ImageView newImageView = createImageView(bitmaps[i]);
+            final ImageView newImageView = createImageView(bitmaps[i], TYPE_NEW_VIEW);
             addToViewGroup(newImageView, i, TYPE_NEW_VIEW);
             Animator animator = setAnimator(newImageView, i, TYPE_NEW_VIEW);
             animator.addListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationStart(Animator animation) {
+                    super.onAnimationStart(animation);
+                    newImageView.setVisibility(View.VISIBLE);
+                }
+
                 @Override
                 public void onAnimationEnd(Animator animation) {
                     super.onAnimationEnd(animation);
@@ -100,7 +112,7 @@ public abstract class EffectView {
      * @param bitmap bitmap
      * @return ImageView
      */
-    protected abstract ImageView createImageView(Bitmap bitmap);
+    protected abstract ImageView createImageView(Bitmap bitmap, int type);
 
     /**
      * 通过View创建Bitmap

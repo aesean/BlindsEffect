@@ -106,7 +106,7 @@ public class BlindsEffect extends EffectView {
     }
 
     @Override
-    protected ImageView createImageView(Bitmap bitmap) {
+    protected ImageView createImageView(Bitmap bitmap,int type) {
         Context context = mContainer.getContext();
         ImageView imageView = new ImageView(context);
         imageView.setImageBitmap(bitmap);
