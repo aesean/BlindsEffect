@@ -2,6 +2,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/rl_root_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:paddingBottom="@dimen/activity_vertical_margin"
@@ -15,19 +16,20 @@
     <LinearLayout
         android:id="@+id/ll_blind"
         android:layout_width="150dp"
-        android:layout_height="120dp"
+        android:layout_height="150dp"
         android:orientation="horizontal" />
 
     <android.support.v7.widget.GridLayout
         android:id="@+id/gl_new_effect"
         android:layout_width="250dp"
         android:layout_height="148dp"
-        android:background="@drawable/lry_0"
         android:layout_below="@+id/ll_blind"
+        android:background="@drawable/lry_0"
         app:columnCount="6"
-        app:rowCount="6"/>
+        app:rowCount="6" />
 
     <LinearLayout
+        android:id="@+id/ll_container"
         android:layout_width="match_parent"
         android:layout_height="160dp"
         android:layout_below="@id/gl_new_effect"

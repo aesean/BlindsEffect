@@ -6,7 +6,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.GridLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.LinearLayout;
 
+import com.aesean.blinds.lib.BlindsEffect;
 import com.aesean.blinds.lib.EffectView;
 import com.aesean.blinds.lib.NewEffect;
 
@@ -29,8 +31,9 @@ public class MainActivity extends AppCompatActivity {
                 GridLayout layout = (GridLayout) findViewById(R.id.gl_new_effect);
                 EffectView blindsEffect = new NewEffect(layout, R.drawable.lry_0, R.drawable.lry_1);
                 blindsEffect.start();
-//                BlindsEffect blindsEffect = new BlindsEffect((LinearLayout) findViewById(R.id.ll_blind), findViewById(R.id.iv_0), findViewById(R.id.iv_1));
-//                blindsEffect.start();
+                BlindsEffect blindsEffect2 = new BlindsEffect((LinearLayout) findViewById(R.id.ll_blind),
+                        findViewById(R.id.iv_0), findViewById(R.id.iv_1));
+                blindsEffect2.start();
             }
         });
     }
